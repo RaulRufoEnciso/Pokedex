@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokedex</title>
+    <link rel="stylesheet" type="text/css" href="Pokedex2.css">
+    <link rel="icon" href="./Pokebola.png" type="image/png">
+</head>
+<body>
+
+    <div class="contenedor">
+        <div class="busqueda">
+            <input id="nombrePokemon" type="text" placeholder="Introduce nombre del Pokemon" size="24px"><br>
+            <button id="buscarPokemon" onclick="buscarPokemon()">
+                <span>Buscar</span>
+                <svg viewBox="-5 -5 110 110" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M0,0 C0,0 100,0 100,0 C100,0 100,100 100,100 C100,100 0,100 0,100 C0,100 0,0 0,0"/>
+                </svg>
+            </button>
+        </div>
+        <div class="informacion">
+            <div id="div_sprite">
+                <img id="sprite">
+            </div>
+            <div id="infoPokemon">
+                <p id="namePokemon"></p>
+                <p id="idPokemon"></p>
+                <ul id="types"></ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        var xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === this.DONE) {
+                
+                document.getElementById("types").replaceChildren();
+                var pokedex = JSON.parse(this.responseText);
+                console.log(JSON.parse(this.responseText));
+                // muestra el sprite shiny del pokemon
+                // document.getElementById("sprite").src = pokedex.sprites.front_shiny;
+                // muestra el sprite normal del pokemon
+                // document.getElementById("sprite").src = pokedex.sprites.front_defaut;
+                // muestra la imagen oficial del pokemon
+                // document.getElementById("sprite").src = pokedex.sprites.other["official-artwork"].front_default;
+                // muestra la imagen oficial del pokemon en shiny
+                document.getElementById("sprite").src = pokedex.sprites.other["official-artwork"].front_shiny;
+                document.getElementById("namePokemon").innerText = "Pokemon name: \n"+pokedex.name;
+                document.getElementById("idPokemon").innerText = "Id: #"+pokedex.id;
+                var tipo = pokedex.types;
+                // console.log(tipo)
+                for (let i = 0; i < tipo.length; i++) {
+                    var lista = document.createElement("li");
+                    lista.textContent = tipo[i].type.name;
+                    document.getElementById("types").appendChild(lista);
+                }
+            }
+        });
+        function buscarPokemon() {
+            var nombrePoke = document.getElementById("nombrePokemon").value;
+            var url = "https://pokeapi.co/api/v2/pokemon/"+nombrePoke;
+            xhr.open("GET", url);
+            xhr.send(null);
+        }
+            
+        
+
+    </script>
+</body>
+</html>
